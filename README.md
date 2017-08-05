@@ -30,4 +30,5 @@ https://pttrns.com
 
 # CSS
 
-http://www.bypeople.com/css-chat/
+* http://www.bypeople.com/css-chat/
+* https://www.comm100.com/livechat/knowledgebase/customize-live-chat-window-with-css.html

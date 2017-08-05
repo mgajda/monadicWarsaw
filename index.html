@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+                <link rel="shortcut icon" href="logos/favicon.ico" />
+		<meta charset="utf-8">
+
+		<title>SpaceBoss Pte Ltd</title>
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/white.css" id="theme">
+
+        <link rel="stylesheet" href="css/zenburn.css">
+                <style>
+                    .reveal section.logo img {              width:  25%; }
+                    .reveal section.demo img { height: 800px; width: auto; }
+                    .reveal section      img { background:none; border:none; box-shadow:none; }
+                    img#ura { height: 2em; width: auto; }
+                </style>
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<div class="slides">
+
+                <!-- Use external markdown resource, separate slides by three newlines; vertical slides by two newlines -->
+
+                <!-- Slides are separated by three dashes (quick 'n dirty regular expression) -->
+                <section data-markdown data-separator="---">
+                    <script type="text/template">
+                        ![logo](logos/spaceboss_logo.png)
+                        * Michal J. Gajda
+                          - PhD bioinformatics
+                          - MSc Computer Science
+                          - 15y experience in software development
+                        * Viiv Chua
+                          - Multimedia MSc
+                          - 10y career in Life Insurance
+                        ---
+                        ## Market (2017)
+                        * 29T $USD worldwide
+                        * 7.8M sq m² of office space in Singapore alone
+                        ![ura](logos/urban_redev_auth.png)
+                        ---
+                        ## Stakeholders:
+                          - tenants:
+                            * office managers
+                            * employees
+                          - facility managers:
+                            * managers
+                            * duty personnel
+                          - contractors:
+                            * service managers
+                            * professionals
+                        ---
+                        ## Competitors
+                        ![WeWork logo](logos/wework.png)
+                        ![ZenDesk logo](logos/zendesk.svg)
+                    </script>
+               </section>
+               <section class="demo" data-markdown data-separator="---">
+                    <script type="text/template">
+                        ![Office space](imgs/workflow_1.png){class: demo}
+                        ---
+                        ![Office space](imgs/workflow_2.png)
+                        ---
+                        ![Office space](imgs/workflow_3.png)
+                        ---
+                        ![Office space](imgs/workflow_4.png)
+                    </script>
+                </section>
+
+                <!-- Slides are separated by newline + three dashes + newline, vertical slides identical but two dashes -->
+                <!-- No "extra" slides, since there are no separators defined (so they'll become horizontal rulers) -->
+            </div>
+		</div>
+
+		<script src="js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'js/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'js/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'js/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'js/notes.js' }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
