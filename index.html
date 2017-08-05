@@ -8,11 +8,11 @@
 		<title>SpaceBoss Pte Ltd</title>
 
 		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/white.css" id="theme">
+		<link rel="stylesheet" href="css/theme/blood.css" id="theme">
 
         <link rel="stylesheet" href="css/zenburn.css">
                 <style>
-                    .reveal section.logo img {              width:  25%; }
+                    .reveal img[alt='logo'] {              width:  50%; }
                     .reveal section.demo img { height: 800px; width: auto; }
                     .reveal section      img { background:none; border:none; box-shadow:none; }
                     img#ura { height: 2em; width: auto; }
@@ -21,7 +21,7 @@
 
 	<body>
 
-		<div class="reveal">
+		<div class="reveal" role="application" data-background-transition="concave">
 
 			<div class="slides">
 
@@ -30,7 +30,7 @@
                 <!-- Slides are separated by three dashes (quick 'n dirty regular expression) -->
                 <section data-markdown data-separator="---">
                     <script type="text/template">
-                        ![logo](logos/spaceboss_logo.png)
+                        ![logo](logos/spaceboss_logo_big.png)
                         * Michal J. Gajda
                           - PhD bioinformatics
                           - MSc Computer Science
@@ -83,6 +83,7 @@
 		<script>
 
 			Reveal.initialize({
+                                transition: 'concave',
 				controls: true,
 				progress: true,
 				history: true,
