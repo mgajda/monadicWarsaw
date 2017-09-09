@@ -5,7 +5,7 @@
                 <link rel="shortcut icon" href="logos/favicon.ico" />
 		<meta charset="utf-8">
 
-		<title>SpaceBoss Pte Ltd</title>
+		<title>Problems of making Data Science in Haskell</title>
 
 		<link rel="stylesheet" href="css/reveal.css">
 		<link rel="stylesheet" href="css/theme/white.css" id="theme">
@@ -30,48 +30,41 @@
                 <!-- Slides are separated by three dashes (quick 'n dirty regular expression) -->
                 <section data-markdown data-separator="---">
                     <script type="text/template">
-                        ![logo](logos/spaceboss_logo_big.png)
                         * Michal J. Gajda
                           - PhD bioinformatics
                           - MSc Computer Science
                           - 15y experience in software development
-                        * Viiv Chua
-                          - Multimedia MSc
-                          - 10y career in Life Insurance
+                          - Using Haskell since late 20th century
                         ---
-                        ## Market (2017)
-                        * 29T $USD worldwide
-                        * 7.8M sq m² of office space in Singapore alone
-                        ![ura](logos/urban_redev_auth.png)
+                        * Data Science
+                          - advanced data analysis methods
+                          - diverse data sources
+                          - large datasets
+                          - quick turnaround desired
                         ---
-                        ## Stakeholders:
-                          - tenants:
-                            * office managers
-                            * employees
-                          - facility managers:
-                            * managers
-                            * duty personnel
-                          - contractors:
-                            * service managers
-                            * professionals
+                        * Quick turnaround
+                          - Load a variety of files: images, HTML, CSVs...
+                          - Use their structure
+                          - [Example](http://localhost:8888/notebooks/Experiment%20on%20eigenvalues.ipynb)
                         ---
-                        ## Competitors
-                        ![WeWork logo](logos/wework.png)
-                        ![ZenDesk logo](logos/zendesk.svg)
+                        * Diverse data sources
+                          - [`json-autotype`](https://hackage.haskell.org/package/json-autotype) allows to internalize any JSON
+                          - [`cassava`](https://hackage.haskell.org/package/cassava) allows to quickly parse CSV file
+                          - [`hPDB`](https://hackage.haskell.org/package/hPDB) allows to quickly parse PDB file...
                         ---
-                        ![Orgchart](imgs/orgchart.png)
+                        * Large datasets
+                          - support data compression formats:
+                            * arrow
+                            * succinct data structures
+                          - matrix, and sparse matrix encodings
+                        ---
+                        * Advanced data analysis methods
+                          - Matrix factorization
+                          - Graph algorithms
+                          - Spark, TensorFlow APIs
                     </script>
                </section>
                <section class="demo" data-markdown data-separator="---">
-                    <script type="text/template">
-                        ![Office space](imgs/workflow_1.png){class: demo}
-                        ---
-                        ![Office space](imgs/workflow_2.png)
-                        ---
-                        ![Office space](imgs/workflow_3.png)
-                        ---
-                        ![Office space](imgs/workflow_4.png)
-                    </script>
                 </section>
 
                 <!-- Slides are separated by newline + three dashes + newline, vertical slides identical but two dashes -->
