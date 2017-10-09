@@ -28,40 +28,87 @@
                 <!-- Use external markdown resource, separate slides by three newlines; vertical slides by two newlines -->
 
                 <!-- Slides are separated by three dashes (quick 'n dirty regular expression) -->
-                <section data-markdown data-separator="---">
+                <section data-markdown data-separator="^---$">
                     <script type="text/template">
-                        * Michal J. Gajda
-                          - PhD bioinformatics
-                          - MSc Computer Science
-                          - 15y experience in software development
-                          - Using Haskell since late 20th century
-                        ---
-                        * Data Science
-                          - advanced data analysis methods
-                          - diverse data sources
-                          - large datasets
-                          - quick turnaround desired
-                        ---
-                        * Quick turnaround
-                          - Load a variety of files: images, HTML, CSVs...
-                          - Use their structure
-                          - [Example](http://localhost:8888/notebooks/Experiment%20on%20eigenvalues.ipynb)
-                        ---
-                        * Diverse data sources
-                          - [`json-autotype`](https://hackage.haskell.org/package/json-autotype) allows to internalize any JSON
-                          - [`cassava`](https://hackage.haskell.org/package/cassava) allows to quickly parse CSV file
-                          - [`hPDB`](https://hackage.haskell.org/package/hPDB) allows to quickly parse PDB file...
-                        ---
-                        * Large datasets
-                          - support data compression formats:
-                            * arrow
-                            * succinct data structures
-                          - matrix, and sparse matrix encodings
-                        ---
-                        * Advanced data analysis methods
-                          - Matrix factorization
-                          - Graph algorithms
-                          - Spark, TensorFlow APIs
+# JSON Autotype and Data Science in Haskell
+## Michał J. Gajda
+---
+## Michał J. Gajda
+  - PhD bioinformatics
+  - MSc Computer Science
+  - 15y experience in software development
+  - Using Haskell since late 20th century
+---
+## Data Science
+  - advanced data analysis methods
+  - diverse data sources
+  - large datasets
+  - quick turnaround desired
+---
+## Quick turnaround
+  - Load a variety of files: images, HTML, CSVs...
+  - Use their structure
+  - [Example](http://localhost:8888/notebooks/Experiment%20on%20eigenvalues.ipynb)
+---
+## JSON data input
+
+- Motivating example:
+```
+[{name:'Shane Peyton',
+  age: '32',
+  role: 'admin'},
+ {name:'Alice Benton',
+  age: '48'}]
+```
+---
+## Union types
+```haskell
+data Type = Array  [         Type ]
+          | Object [(String, Type)]
+          | Union  [         Type ]
+          | Int
+          | String
+```
+```haskell
+(⊔) :: Type -> Type -> Type
+Int ⊔ String = Union [Int, String]
+Array a ⊔ Array b = Array (a ⊔ b)
+``` <!-- .element: class="fragment" -->
+---
+## What about objects?
+
+```haskell
+Object o ⊔ Object p = Object (bimap (⊔) o p)
+```
+- Here `bimap` maps by joining `o` and `p` by key
+---
+## Union types
+- General solution to treat unstructured data <!-- .element: class="fragment" -->
+- Works without quantification <!-- .element: class="fragment" -->
+- We can generate parsers/pretty-printers and statically check correctness of transformation on unstructured data <!-- .element: class="fragment" -->
+- What if we need functions? <!-- .element: class="fragment" -->
+  - We need intersection types `⊓` like in [TypeScript](https://www.typescriptlang.org/docs/handbook/advanced-types.html#intersection-types)
+  - (These will happily supersede type classes!)
+  - Note that inference with intersection types *requires* declarations
+---
+## Needs of data science
+* Diverse data sources
+  - [`json-autotype`](https://hackage.haskell.org/package/json-autotype) allows to internalize any JSON
+  - [`cassava`](https://hackage.haskell.org/package/cassava) allows to quickly parse CSV file
+  - [`hPDB`](https://hackage.haskell.org/package/hPDB) allows to quickly parse PDB file...
+* Suggestion: <!-- .element: class="fragment" -->
+  - add MIME filetype to the package that reads/writes the format
+---
+## Needs of data science
+* Advanced data analysis methods
+  - Matrices: [hmatrix](http://hackage.haskell.org/package/hmatrix) <!-- .element: class="fragment" --> [repa](http://hackage.haskell.org/package/repa) <!-- .element: class="fragment" --> [accelerate](http://hackage.haskell.org/package/accelerate) <!-- .element: class="fragment" -->
+  - Graph algorithms [hasbolt](http://hackage.haskell.org/package/hasbolt) <!-- .element: class="fragment" -->
+  [haskell-cypher](http://hackage.haskell.org/package/haskell-cypher) <!-- .element: class="fragment" -->
+  - Spark [sparky](http://hackage.haskell.org/package/sparky) <!-- .element: class="fragment" -->
+  - TensorFlow APIs [tensorflow-haskell](http://hackage.haskell.org/package/tensorflow-haskell) <!-- .element: class="fragment" -->
+---
+## Future
+* [Data Haskell project](http://datahaskell.org)
                     </script>
                </section>
                <section class="demo" data-markdown data-separator="---">
