@@ -5,7 +5,7 @@
                 <link rel="shortcut icon" href="logos/favicon.ico" />
 		<meta charset="utf-8">
 
-		<title>Problems of making Data Science in Haskell</title>
+		<title>JSON-Autotype i wykorzystanie Haskella w Data Science</title>
 
 		<link rel="stylesheet" href="css/reveal.css">
 		<link rel="stylesheet" href="css/theme/white.css" id="theme">
@@ -30,90 +30,164 @@
                 <!-- Slides are separated by three dashes (quick 'n dirty regular expression) -->
                 <section data-markdown data-separator="^---$">
                     <script type="text/template">
-# JSON Autotype and Data Science in Haskell
-## Michał J. Gajda
-- Oct 9 2017
-- Hong Kong Functional Programming meetup
+## JSON-Autotype i wykorzystanie Haskella w Data Science
+### Michał J. Gajda
+- 19 grudnia 2017
+- MonadicWarsaw
 ---
 ## Michał J. Gajda
-  - PhD bioinformatics
-  - MSc Computer Science
-  - 15y experience in software development
-  - Using Haskell since late 20th century
+  - mgr informatyki
+  - doktor bioinformatyki
+  - 15 lat doświadczenia w programowaniu
+  - używa Haskella od poprzedniego wieku
 ---
 ## Data Science
-  - advanced data analysis methods
-  - diverse data sources
-  - large datasets
-  - quick turnaround desired
+  - "Nauka o danych"
+  - złożone algorytmy analizy danych
+  - różnorodne źródła danych
+  - duże zbiory danych, zarówno w bajtach, jak i złożoności
+  - szybkie iteracje analiz
 ---
-## Quick turnaround
-  - Load a variety of files: images, HTML, CSVs...
-  - Use their structure
-  - [Example](http://localhost:8888/notebooks/Experiment%20on%20eigenvalues.ipynb)
-```
-docker run -it --volume $(pwd):/notebooks --publish 8888:8888 gibiansky/ihaskell:latest
+## Przyspieszanie iteracji
+  - Ładowanie różnych plików: obrazy, HTML, CSV, JSON..
+  - Używanie struktury danych
+  - [Przykład](http://localhost:8888/notebooks/Experiment%20on%20eigenvalues.ipynb)
+```bash
+docker run -it                    \
+           --volume $(pwd):/notebooks \
+           --publish 8888:8888        \
+           gibiansky/ihaskell:latest
 ```
 ---
-## JSON data input
+## JSON jako standard wprowadzania informacji
 
-- Motivating example:
+- Przykład motywujący:
 ```
-[{name:'Shane Peyton',
-  age: '32',
-  role: 'admin'},
- {name:'Alice Benton',
-  age: '48'}]
+[{imię:    'Jan Kowalski',
+  wiek:    32 ,
+  funkcja: 'admin'},
+ {imię: 'Alicja Byszewska',
+  wiek:  48 }]
 ```
 ---
-## Union types
+## Typy z uniami
 ```haskell
 data Type = Array  [         Type ]
           | Object [(String, Type)]
           | Union  [         Type ]
           | Int
           | String
+          | Null -- lub Undefined
 ```
+
 ```haskell
 (⊔) :: Type -> Type -> Type
 Int ⊔ String = Union [Int, String]
 Array a ⊔ Array b = Array (a ⊔ b)
-``` <!-- .element: class="fragment" -->
+```
+<!-- .element: class="fragment" -->
+
+```haskell
+Null = Union []
+```
+<!-- .element: class="fragment" -->
 ---
-## What about objects?
+## Co z obiektami?
 
 ```haskell
 Object o ⊔ Object p = Object (bimap (⊔) o p)
 ```
-- Here `bimap` maps by joining `o` and `p` by key
+
+* Tutaj `bimap` to dwuargumentowy `map`, łączący `o` i `p` po nazwie klucza. (Wymaga elementu neutralnego.)
 ---
-## Union types
-- General solution to treat unstructured data <!-- .element: class="fragment" -->
-- Works without quantification <!-- .element: class="fragment" -->
-- We can generate parsers/pretty-printers and statically check correctness of transformation on unstructured data <!-- .element: class="fragment" -->
-- What if we need functions? <!-- .element: class="fragment" -->
-  - We need intersection types `⊓` like in [TypeScript](https://www.typescriptlang.org/docs/handbook/advanced-types.html#intersection-types)
-  - (These will happily supersede type classes!)
-  - Note that inference with intersection types *requires* declarations
+## Typy z uniami
+- Rozwiązanie dla danych _semiustrukturyzowanych_ i nieustrukturyzowanych
+- Nie potrzebują kwantyfikatorów <!-- .element: class="fragment" -->
+- Generowanie parserów sprawdzających <!-- .element: class="fragment" -->
+- Sprawdzanie zgodności danych wejściowych z ukrytymi założeniami <!-- .element: class="fragment" -->
+- Statyczne sprawdzanie kodu <!-- .element: class="fragment" -->
+- Co jeśli potrzebujemy funkcji? <!-- .element: class="fragment" -->
+  - Może potrzebujemy typów z intersekcją `⊓` jak w języku [TypeScript](https://www.typescriptlang.org/docs/handbook/advanced-types.html#intersection-types)?
 ---
-## Needs of data science
-* Diverse data sources
-  - [`json-autotype`](https://hackage.haskell.org/package/json-autotype) allows to internalize any JSON
-  - [`cassava`](https://hackage.haskell.org/package/cassava) allows to quickly parse CSV file
-  - [`hPDB`](https://hackage.haskell.org/package/hPDB) allows to quickly parse PDB file...
-* Suggestion: <!-- .element: class="fragment" -->
-  - add MIME filetype to the package that reads/writes the format
+# Kłopot z funkcjami
+
+```javascript
+var person={imię: "Michał Gajda",
+            wiek: 39,
+            wyslijMejla: function (treść) {
+              return "To: migamake@migamake.com\n" +
+                     "Subject:Cześć\n\n" +
+                     treść; }
+           }
+```
+<!-- .element: class="fragment" -->
+
+```haskell
+imię :: String
+wiek :: Number
+wyślijMejla :: String -> String
+```
+<!-- .element: class="fragment" -->
+```haskell
+person :: { imię :: String
+          , wiek :: Number
+          , wyślijMejla :: String -> String }
+```
+<!-- .element: class="fragment" -->
 ---
-## Needs of data science
-* Advanced data analysis methods
-  - Matrices: [hmatrix](http://hackage.haskell.org/package/hmatrix) <!-- .element: class="fragment" --> [repa](http://hackage.haskell.org/package/repa) <!-- .element: class="fragment" --> [accelerate](http://hackage.haskell.org/package/accelerate) <!-- .element: class="fragment" -->
-  - Graph algorithms [hasbolt](http://hackage.haskell.org/package/hasbolt) <!-- .element: class="fragment" -->
-  [haskell-cypher](http://hackage.haskell.org/package/haskell-cypher) <!-- .element: class="fragment" -->
-  - Spark [sparky](http://hackage.haskell.org/package/sparky) <!-- .element: class="fragment" -->
-  - TensorFlow APIs [tensorflow-haskell](http://hackage.haskell.org/package/tensorflow-haskell) <!-- .element: class="fragment" -->
+# Kłopot z funkcjami
+```javascript
+wyślijMejla(45)
+wyślijMejla("Cześć Michał!")
+```
+```haskell
+wyślijMejla :: ToString a => a -> String
+```
+<!-- .element: class="fragment" -->
 ---
-## Future
-* [Data Haskell project](http://datahaskell.org)
+# Kłopot z funkcjami
+
+```javascript
+function sumUp(coll) {
+  return coll.reduce(function (x, y) { return x+y; });
+}
+```
+```haskell
+sumUp :: { reduce :: (a -> a -> a) -> a }
+```
+<!-- .element: class="fragment" -->
+- Pojawia się kwantyfikacja <!-- .element: class="fragment" -->
+---
+## Potrzeby nauki o danych
+* Wprowadzania roznorodnych danych
+ <!-- .element: class="fragment" -->
+  - [`json-autotype`](https://hackage.haskell.org/package/json-autotype) wprowadzanie JSON-a
+  - [`cassava`](https://hackage.haskell.org/package/cassava) dla CSV
+  - [`hPDB`](https://hackage.haskell.org/package/hPDB) dla struktur z Protein DataBank
+* Sugestie
+  <!-- .element: class="fragment" -->
+  - dodanie typow MIME do opisu pakietu Cabal, jesli program to czyta
+  - dodanie pola na obraz Dockera do metadanych Cabal
+---
+## Potrzeby nauki  danych
+* Złożone algorytmy analizy danych
+  - Na macierzach: <!-- .element: class="fragment" -->
+    * [hmatrix](http://hackage.haskell.org/package/hmatrix) [repa](http://hackage.haskell.org/package/repa) [accelerate](http://hackage.haskell.org/package/accelerate) ...
+  - Na grafach <!-- .element: class="fragment" -->
+    * [hasbolt](http://hackage.haskell.org/package/hasbolt) [haskell-cypher](http://hackage.haskell.org/package/haskell-cypher)
+  - Spark <!-- .element: class="fragment" -->
+    * [sparky](http://hackage.haskell.org/package/sparky)
+  - TensorFlow API <!-- .element: class="fragment" -->
+    * [tensorflow-haskell](http://hackage.haskell.org/package/tensorflow-haskell)
+---
+## Przyszłość
+* [Projekt Data Haskell](http://datahaskell.org)
+  - Linki i krótkie opisy projektów
+  - Są kanały Gittera
+  - Plan implementacji DataFrame w Haskellu <!-- .element: class="fragment" -->
+  - Plan stworzenia bazy danych obrazów Dockera i VM-ów <!-- .element: class="fragment" -->
+* Plan workshop-u na ICFP 2̶0̶1̶7̶2018.
+* Plan dzielenia kodu z Idrisem i PureScriptem.
                     </script>
                </section>
                <section class="demo" data-markdown data-separator="---">
